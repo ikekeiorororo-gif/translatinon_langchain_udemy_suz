@@ -7,45 +7,25 @@ from langchain_core.prompts import (
 )
 import os
 
-# ==============================
-# OpenAI APIキーの設定
-# ==============================
-# Streamlit Cloud の [Secrets] に以下のように記載してください：
-# [OpenAIAPI]
-# openai_api_key = "sk-xxxxx"
+# 環境変数からOpenAIキー取得（Render用）
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
-os.environ["OPENAI_API_KEY"] = st.secrets["OpenAIAPI"]["openai_api_key"]
+chat = ChatOpenAI(model="gpt-4o-mini")
 
-# ==============================
-# モデル設定
-# ==============================
-chat = ChatOpenAI(model="gpt-4o-mini")  # 高速・高精度モデル
-
-# ==============================
-# プロンプトテンプレート
-# ==============================
 system_template = (
     "あなたは優秀な翻訳アシスタントです。{source_lang}の文章を{target_lang}に翻訳してください。"
     "翻訳結果のみを出力し、説明や補足は一切書かないでください。"
 )
 system_message_prompt = SystemMessagePromptTemplate.from_template(system_template)
-
-human_template = "{text}"
-human_message_prompt = HumanMessagePromptTemplate.from_template(human_template)
+human_message_prompt = HumanMessagePromptTemplate.from_template("{text}")
 
 chat_prompt = ChatPromptTemplate.from_messages(
     [system_message_prompt, human_message_prompt]
 )
 
-# ==============================
-# 状態管理
-# ==============================
 if "response" not in st.session_state:
     st.session_state["response"] = ""
 
-# ==============================
-# 翻訳関数
-# ==============================
 def communicate():
     text = st.session_state["user_input"]
     if not text.strip():
@@ -59,9 +39,6 @@ def communicate():
     response = chat.invoke(messages)
     st.session_state["response"] = response.content
 
-# ==============================
-# Streamlit UI
-# ==============================
 st.title("🌍 翻訳アプリ")
 st.caption("LangChain + OpenAI API を使った多言語翻訳ツール")
 
