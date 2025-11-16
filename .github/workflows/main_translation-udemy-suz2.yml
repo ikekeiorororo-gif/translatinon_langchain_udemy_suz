@@ -63,4 +63,4 @@ jobs:
         with:
           app-name: 'translation-udemy-suz2'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_45D56B9F9EA24561A1D0E6E433DEC897 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B5CD135648634CF3AC41D2CBBB4FF703 }}
